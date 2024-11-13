@@ -3,10 +3,12 @@
 
 rm(list = ls())
 # set the working directory where your GIS data are located
-setwd("G:/Shared drives/_Org OlffLab/Teaching/APCE/APCE2024/APCE2024GIS")
+setwd("C:/Users/Lina/Documents/master year 1/
+      advanced population and community ecology/GIT")
 
 # restore the libraries of the project 
 renv::restore()
+renv::snapshot() # updates the packages to renv restore
 
 
 # load the different libraries
@@ -71,6 +73,8 @@ xlimits<-c(550000,900000)
 ylimits<-c(9600000,9950000)
 
 # plot the woody biomass map that you want to predict
+# plot woody biomass map
+
 
 # plot the rainfall map
 
