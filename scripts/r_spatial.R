@@ -9,7 +9,7 @@ setwd("C:/Users/Lina/Documents/master year 1/advanced population and community e
 
 # restore the libraries of the project 
 renv::restore()
-renv::snapshot() # updates the packages to renv restore
+# renv::snapshot() # updates the packages to renv restore
 
 
 # load the different libraries
@@ -36,7 +36,6 @@ barplot(rep(1,10), col = RColorBrewer::brewer.pal(9, "YlOrRd")) # how you choose
 library(viridis) # also colour pallete
 barplot(rep(1,10), col = rev(viridis::viridis(10)))
 barplot(rep(1,10), col = viridis::plasma(10))
-barplot(rep(1,10), col = viridis::heat(10))
 viridis::plasma(10)
 library(wesanderson)
 barplot(rep(1,10), col = rev(wesanderson::wes_palette("Zissou1", 10, type = "continuous")))
@@ -89,7 +88,7 @@ woody_map <- ggplot() +
                              fill=NA, linewidth=0.5, colour="lightblue") +
   tidyterra::geom_spatvector(data=lakes, fill="blue") +
   tidyterra::geom_spatvector(data=studyarea, fill=NA, linewidth=1, colour="red") +
-  labs(title="woody biomass") + 
+  labs(title="Woody biomass") + 
   coord_sf(xlimits, ylimits, datum=sf::st_crs(32736)) +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank()) +
@@ -109,7 +108,7 @@ rain_map <- ggplot() +
                              fill=NA, linewidth=0.5, colour="lightblue") +
   tidyterra::geom_spatvector(data=lakes, fill="blue") +
   tidyterra::geom_spatvector(data=studyarea, fill=NA, linewidth=1, colour="red") +
-  labs(title="rainfall") + coord_sf(xlimits, ylimits, datum=sf::st_crs(32736)) +
+  labs(title="Main annual rainfall") + coord_sf(xlimits, ylimits, datum=sf::st_crs(32736)) +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank()) +
   ggspatial::annotation_scale(location="bl", width_hint=0.2)
@@ -128,7 +127,7 @@ elevation_map <- ggplot() +
                              fill=NA, linewidth=0.5, colour="lightblue") +
   tidyterra::geom_spatvector(data=lakes, fill="blue") +
   tidyterra::geom_spatvector(data=studyarea, fill=NA, linewidth=1, colour="red") +
-  labs(title= "elevation") + coord_sf(xlimits, ylimits, datum=sf::st_crs(32736)) +
+  labs(title= "Elevation") + coord_sf(xlimits, ylimits, datum=sf::st_crs(32736)) +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank()) +
   ggspatial::annotation_scale(location="bl", width_hint=0.2)
@@ -139,6 +138,9 @@ elevation_map
 woody_elevation_rain_map2 <- woody_map + elevation_map + rain_map + 
   patchwork::plot_layout(ncol=2)
 woody_elevation_rain_map2
+ggsave("C:/Users/Lina/Documents/github/APCE24/spatial-r-linaeriksson02/
+       plots/firstmap.png", 
+       woody_elevation_rain_map2, width=20, height=20, units="cm")
 
 ############################
 ### explore your study area
@@ -425,7 +427,7 @@ combined_sa <- woody_map_sa + elevation_map_sa + rain_map_sa +
   rpoints_map_sa +
   patchwork::plot_layout(ncol=3)
 combined_sa
-ggsave("C:/Users/Lina/Documents/github/APCE24/spatial-r-linaeriksson02/plots/combined_sa.png", combined_sa, width=20, height=20, units="cm")
+ggsave("C:/Users/Lina/Documents/github/APCE24/spatial-r-linaeriksson02/plots/figuretwo.png", combined_sa, width=20, height=20, units="cm")
 
 
 # extract your the values of the different raster layers to the points
@@ -471,6 +473,10 @@ pointdata<-cbind(dist2river_points[,2],elevation_points[,2],
                  landform_points[,2],woody_points[,2]) |>
   as_tibble()
 pointdata
+
+# made a csv file from all points to use in google sheeets 
+getwd()
+readr::write_csv(pointdata,"pointdata.csv")
 
 # plot how woody cover is predicted by different variables
 # Create a correlation panel plot
