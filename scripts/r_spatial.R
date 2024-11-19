@@ -504,7 +504,7 @@ ggplot(data=pointdata_long, mapping=aes(x=pred_val,y=woody,group=pred_var)) +
 
 # do a pca
 # Load the vegan package
-install.packages("vegan")
+# install.packages("vegan")
 library(vegan)
 # Perform PCA using the rda() function
 pca_result <- vegan::rda(pointdata,
