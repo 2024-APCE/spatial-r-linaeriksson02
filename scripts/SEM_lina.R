@@ -68,7 +68,7 @@ AIC(SEM_fit, SEM_fit2)
 #### model 3
 
 SEM_model3 <- 'woody~cec+elevation+ burnfreq
-cec~burnfreq+elevation
+cec~burnfreq+elevation+rainfall
 burnfreq~CorProtAr+rainfall
 CorProtAr~elevation
 rainfall~elevation'
@@ -80,3 +80,22 @@ SEM_fit3 <- lavaan::sem(SEM_model3, data = SEM_data)
 summary(SEM_fit3, standardized = T, fit.measures = T, rsquare = T)
 
 AIC(SEM_fit, SEM_fit2, SEM_fit3)
+
+
+
+########### model4
+SEM_model4 <- 'woody~cec+elevation+ burnfreq
+cec~burnfreq+elevation
+burnfreq~CorProtAr
+CorProtAr~elevation'
+
+SEM_model4
+
+SEM_fit4 <- lavaan::sem(SEM_model4, data = SEM_data)
+# show the model results
+summary(SEM_fit4, standardized = T, fit.measures = T, rsquare = T)
+
+AIC(SEM_fit, SEM_fit2, SEM_fit3, SEM_fit4)
+
+
+

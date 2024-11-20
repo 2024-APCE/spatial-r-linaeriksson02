@@ -20,7 +20,7 @@ psych::pairs.panels(pointdata,stars = T, ellipses = F)
 
 # Define the models
 # I started from this initially hypothesized causal scheme, my model 1)
-browseURL("https://docs.google.com/presentation/d/1PB8rhbswyPew-FYULsw1pIl8Jyb1FFElKPf34DZrEY8/edit?usp=sharing")
+#browseURL("https://docs.google.com/presentation/d/1PB8rhbswyPew-FYULsw1pIl8Jyb1FFElKPf34DZrEY8/edit?usp=sharing")
 
 # Model 1: woody predicted by burnfreq and rainfall
 model_woody <- lm(woody ~  rainfall +burnfreq, 
