@@ -133,10 +133,10 @@ elevation_map <- ggplot() +
   ggspatial::annotation_scale(location="bl", width_hint=0.2)
 elevation_map
 
+
 # combine the different maps  into one composite map using the patchwork library
 # and save it to a high resolution png
-woody_elevation_rain_map2 <- woody_map + elevation_map + rain_map + 
-  patchwork::plot_layout(ncol=2)
+woody_elevation_rain_map2 <- hillshade_map + woody_map + elevation_map + rain_map
 woody_elevation_rain_map2
 ggsave("C:/Users/Lina/Documents/github/APCE24/spatial-r-linaeriksson02/
        plots/firstmap.png", 

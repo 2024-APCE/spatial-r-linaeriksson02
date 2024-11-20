@@ -8,6 +8,8 @@
 
 rm(list = ls()) # clear environment
 
+renv::restore()
+
 library(tidyverse)
 # load the lavaan library
 library(lavaan)
@@ -15,7 +17,7 @@ library(lavaan)
 
 
 # dataset:
-browseURL("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSsnkYCf5IHC7S4PCODOjp-fceBF7vYrDWt91_h8rltu5ULnu9QDbZHIhI_Smc8iE6M7_7gBqFm79k/pub?gid=744190039&single=true&output=csv")
+# browseURL("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSsnkYCf5IHC7S4PCODOjp-fceBF7vYrDWt91_h8rltu5ULnu9QDbZHIhI_Smc8iE6M7_7gBqFm79k/pub?gid=744190039&single=true&output=csv")
 # read the data from the google docs link:
 SEM_data<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSSsnkYCf5IHC7S4PCODOjp-fceBF7vYrDWt91_h8rltu5ULnu9QDbZHIhI_Smc8iE6M7_7gBqFm79k/pub?gid=744190039&single=true&output=csv") 
 
@@ -32,53 +34,49 @@ SEM_data_std
 
 ################### next
 
+SEM_model <- 'woody~burnfreq+rainfall
+burnfreq~rainfall+CorProtAr
+rainfall~elevation+hills
+hills~~elevation
+CorProtAr~elevation+hills'
+SEM_model
 
-# note that this does not affect the relations between the variables, only the scales  
-
-# make a pairs panel to inspect linearity of relations and expected normality of residuals
-psych::pairs.panels(Anderson2007 %>% select(RES_LHU, BIOMASS,FIRE_FRQ,
-                                            NMS,LF_N),
-                    stars = T, ellipses = F)
-psych::pairs.panels(Anderson2007std %>% select(RES_LHU, BIOMASS,FIRE_FRQ,
-                                               NMS,LF_N),
-                    stars = T, ellipses = F)
-
-# analyse the model (response ~ predictors) with a multiple regression approach 
-
-multreg_std <- lm(LF_N~RES_LHU + BIOMASS + FIRE_FRQ + NMS, data = Anderson2007std)
-summary(multreg_std)
-
-# visualization of the result: 
-# browseURL("https://docs.google.com/presentation/d/1Q7uXC5Wiu0G4Xsp5uszCNHKOnf1IMI9doY-13Wbay4A/edit?usp=sharing")
-
-# Make a lavaan model as hypothesized in the Anderson et al 2007 paper and fit the model 
-
-Leaf_N_model <- 'LF_N~BIOMASS + RES_LHU + FIRE_FRQ + NMS
-                BIOMASS~FIRE_FRQ + RES_LHU
-                NMS~FIRE_FRQ + RES_LHU'
-Leaf_N_model
-
-Leaf_N_fit <- lavaan::sem(Leaf_N_model, data = Anderson2007std)
+SEM_fit <- lavaan::sem(SEM_model, data = SEM_data)
 # show the model results
-summary(Leaf_N_fit, standardized = T, fit.measures = T, rsquare = T)
+summary(SEM_fit, standardized = T, fit.measures = T, rsquare = T)
 
 
 # goodness of fit (should be >0.9): CFI and TLI
 # badness of fit: ( should be <0.1): RMSEA, SRMR
 
+#### model 2
+SEM_model2 <- 'woody~burnfreq+cec
+cec~burnfreq+CorProtAr+rainfall
+burnfreq~CorProtAr+rainfall
+CorProtAr~elevation+hills
+rainfall~elevation+hills
+hills~~elevation'
+SEM_model2
 
-# also explore the models as shown in fig 5b and 5c of the Anderson2007 paper
-# so repeat the model for leaf P content
-
-multreg_std_P <- lm(LF_P~RES_LHU + BIOMASS + FIRE_FRQ + NMS, data = Anderson2007std)
-summary(multreg_std_P)
-
-Leaf_P_model <- 'LF_P~BIOMASS + RES_LHU + FIRE_FRQ + NMS
-                BIOMASS~FIRE_FRQ + RES_LHU
-                NMS~FIRE_FRQ + RES_LHU'
-Leaf_P_model
-
-Leaf_P_fit <- lavaan::sem(Leaf_P_model, data = Anderson2007std)
+SEM_fit2 <- lavaan::sem(SEM_model2, data = SEM_data)
 # show the model results
-summary(Leaf_P_fit, standardized = T, fit.measures = T, rsquare = T)
+summary(SEM_fit2, standardized = T, fit.measures = T, rsquare = T)
 
+AIC(SEM_fit, SEM_fit2)
+
+
+#### model 3
+
+SEM_model3 <- 'woody~cec+elevation+ burnfreq
+cec~burnfreq+elevation
+burnfreq~CorProtAr+rainfall
+CorProtAr~elevation
+rainfall~elevation'
+
+SEM_model3
+
+SEM_fit3 <- lavaan::sem(SEM_model3, data = SEM_data)
+# show the model results
+summary(SEM_fit3, standardized = T, fit.measures = T, rsquare = T)
+
+AIC(SEM_fit, SEM_fit2, SEM_fit3)
